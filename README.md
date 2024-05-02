@@ -305,4 +305,4 @@ This plugin provides a few helper functions to add or remove items on runtime:
 # Other plugins 🕵️
 
 - Check out my [gists](https://gist.github.com/ninetailsrabbit) You might find some interesting components or configuration files there.
-- Grab some useful tools for your Godot projects with [GodotWizards]](https://github.com/ninetailsrabbit/GodotWizards])
+- Grab some useful tools for your Godot projects with [GodotWizards](https://github.com/ninetailsrabbit/GodotWizards)
