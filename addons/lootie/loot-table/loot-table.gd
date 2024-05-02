@@ -1,7 +1,6 @@
 @tool
-class_name LootTable extends Node
+extends Node
 
-enum ITEM_RARITY { COMMON, UNCOMMON, RARE, LEGENDARY, MYTHIC, ETERNAL, ABYSSAL, COSMIC, DIVINE} ## Expand here as to adjust it to your game requirements
 enum PROBABILITY { WEIGHT, ROLL_TIER }
 
 ## The available items that will be used on a roll
