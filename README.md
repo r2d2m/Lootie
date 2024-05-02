@@ -21,7 +21,7 @@
 - [Getting started 💨](#getting-started-)
   - [Global](#global)
   - [Individual node](#individual-node)
-    - [LootTable via GDScript](#loottable-via-gdscript)
+  - [LootTable via GDScript](#loottable-via-gdscript)
 - [LootTableItem 🟨](#loottableitem-)
   - [Custom Resource Extension](#custom-resource-extension)
   - [Item Mapper Class](#item-mapper-class)
@@ -59,7 +59,7 @@ class_name RootLootTable extends LootTable
 
 ![node-added](images/node-added.png)
 
-### LootTable via GDScript
+## LootTable via GDScript
 
 The `LootieTable` node can be initialied with the `_init` constructor and receive an array of `LootTableItem`, if in the editor exists already defined `LootTableItem` Resources, the ones passed on the constructor will be appended.
 
