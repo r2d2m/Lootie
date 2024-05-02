@@ -94,7 +94,9 @@ var loot := lootie_table.generate(3)
 - Based on the `LootTableItem properties`, the mapper should translate or transform the data into an equivalent Item class or resource from your game's data model.
 - When generating loot using the LootTable plugin, use the mapper to convert the generated `LootTableItem` instances into your game's Item objects
 
-**Something like this, as individual cases can be very different, I hope it gives you an idea of where to start.** I'm using new but you can get the item from your own database or global dictionary where the `id already` returns the item from your game.
+**Something like this, as individual cases can be very different, I hope it gives you an idea of where to start.**
+
+I'm using `new()` but you can get the item from your own database or global dictionary where the `id` already returns the item from your game.
 
 Try it out and see what works best for you.
 
@@ -239,15 +241,15 @@ func _on_death():
 You can use the `probability_type` you want on the generation function each time, by default uses the exported `probability_type` parameter:
 
 ```swift
-loot_table.generate(5, LootieTable.ROLL_TIER)
+loot_table.generate(5, LootTable.ROLL_TIER)
 // Or
-loot_table.generate(5, LootieTable.WEIGHT)
+loot_table.generate(5, LootTable.WEIGHT)
 
 ```
 
 ## Weighted 🎲
 
-This method iterates through the available items, calculating their cumulative weights and randomly selecting items based on the accumulated weight values. It repeats this process for the specified `times parameter`, potentially returning up to `max_weight_items` items while considering the `allow_duplicates` flag.
+This method iterates through the available items, calculating their cumulative weights and randomly selecting items based on the accumulated weight values. It repeats this process for the specified `times` parameter, potentially returning up to `max_weight_items` items while considering the `allow_duplicates` flag.
 
 Each `LootTableItem` has a `weight` variable, the greater the weight the more probably to be returned on the generation. So higher values for common rarities and lower for higher rarities.
 
@@ -259,7 +261,7 @@ Each `LootTableItem` has a `weight` variable, the greater the weight the more pr
 This method generates random numbers within the specified `max_roll` range and compares them to the defined rarity tiers of the available items. Based on the roll results, it randomly selects items corresponding to the matching rarity tiers, repeating for the specified times parameter and potentially returning up to `max_roll_items` while considering the `allow_duplicates` flag
 
 - `max_roll_items`: Defines the maximum amount of items that this generation can return, so even if you use an higher number of `times` the items returned will be this amount
-- `max_roll`: The maximum number to delimit the roll value ranges, so a value of 100 means that a roll between 0-100 will be generated. This is important because items with `min_roll` > 100 will not be reached on this roll tier generation.
+- `max_roll`: The maximum number to delimit the roll value ranges, so a value of 100 means that a roll between 0-100 will be generated. This is important because items with `min_roll > 100` will not be reached on this roll tier generation.
 
 As you notice in `LootItemRarity` there are two properties that works as a range:
 
