@@ -18,6 +18,7 @@
 
 `Lootie` serves as a tool for game developers to define and manage the random generation of loot items within their games. It allows specifying a list of available items with their respective weights or rarity tiers, enabling the generation of loot with controlled probabilities. The class offers various methods for adding, removing, and manipulating the loot items, along with two primary generation methods: `weight-based` and `roll-tier based`
 
+- [Installation](#installation)
 - [Getting started 💨](#getting-started-)
   - [Global](#global)
   - [Individual node](#individual-node)
@@ -33,6 +34,16 @@
   - [Weighted 🎲](#weighted-)
   - [Roll tier 🎲](#roll-tier-)
 - [Add or Remove items via GDScript](#add-or-remove-items-via-gdscript)
+
+# Installation
+
+You can install the addon from the editor **AssetLib**, further information can be found on [Installing plugins](https://docs.godotengine.org/en/stable/tutorials/plugins/editor/installing_plugins.html)
+
+![download-plugin](images/download.png)
+
+![enable-plugin](images/enable-plugin.png)
+
+Or manually download this repository and add the contents of `addons` to your project `addons` folder
 
 # Getting started 💨
 
