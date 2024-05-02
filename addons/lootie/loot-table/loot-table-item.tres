@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="LootTableItem" load_steps=2 format=3 uid="uid://bp4wwt8urj51u"]
+
+[ext_resource type="Script" path="res://addons/lootie/loot-table/loot-table-item.gd" id="1_mfb0w"]
+
+[resource]
+script = ExtResource("1_mfb0w")
+id = &""
+file = null
+name = ""
+abbreviation = ""
+description = ""
+type = ""
+weight = 1.0
+value = 1.0
+usable = false
+equippable = false

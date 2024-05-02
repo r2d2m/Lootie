@@ -8,4 +8,4 @@
 
 ## Reporting a Vulnerability
 
-Please [raise an issue](https://github.com/ninetailsrabbit/GodotWizards/issues) in case you find a security issue.
+Please [raise an issue](https://github.com/ninetailsrabbit/Lootie/issues) in case you find a security issue.

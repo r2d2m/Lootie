@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="LootItemRarity" load_steps=2 format=3 uid="uid://di42hf605flar"]
+
+[ext_resource type="Script" path="res://addons/lootie/loot-table/loot-item-rarity.gd" id="1_e2jwi"]
+
+[resource]
+script = ExtResource("1_e2jwi")
+grade = 0
+min_roll = 0.0
+max_roll = 0.0
