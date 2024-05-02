@@ -1,5 +1,5 @@
 @tool
-extends Node
+class_name LootTable extends Node
 
 enum PROBABILITY { WEIGHT, ROLL_TIER }
 
@@ -65,10 +65,6 @@ func generate(times: int, type: PROBABILITY = probability_type) -> Array[LootTab
 	return result
 
 
-func total_sum_weight() -> float:
-	return available_items.reduce(func(accum: float, item: LootTableItem): return accum + item.weight, 0.0)
-
-
 func weight(times: int = 1) -> Array[LootTableItem]:
 	var result: Array[LootTableItem] = []
 	var total_weight := 0.0
@@ -109,18 +105,20 @@ func roll_tier(times: int = 1) -> Array[LootTableItem]:
 			break
 			
 		var item_rarity_roll = randf_range(0.0, max_roll)
-
-		result.append_array(pick_random_items_by_roll(item_rarity_roll))
+		var item := pick_random_item_by_roll(item_rarity_roll)
+		
+		if item is LootTableItem:
+			result.append(item)
 		
 	if not allow_duplicates:
 		var no_duplicates_result: Array[LootTableItem] = []
 		
 		for item: LootTableItem in result:
-			if no_duplicates_result.has(item):
+			if not no_duplicates_result.has(item):
 				no_duplicates_result.append(item)
 				
 		return no_duplicates_result
-		
+	
 	return result.slice(0, max_roll_items)
 
 
@@ -128,7 +126,7 @@ func max_current_rarity_roll() -> float:
 	return available_items.map(func(item: LootTableItem): return item.rarity.max_roll).max()
 
 
-func pick_random_items_by_roll(roll: float, amount: int = max_roll_items) -> Array[LootTableItem]:
+func pick_random_item_by_roll(roll: float) -> LootTableItem:
 	var items: Array[LootTableItem] = []
 	
 	var current_roll_items = mirrored_items.filter(
@@ -136,23 +134,13 @@ func pick_random_items_by_roll(roll: float, amount: int = max_roll_items) -> Arr
 			return _decimal_value_is_between(roll, item.rarity.min_roll, item.rarity.max_roll)
 			)
 	
-	if current_roll_items.is_empty() or amount == 0:
-		return items
+	if current_roll_items.is_empty():
+		return null
 	
-	for i in range(amount):
-		if not allow_duplicates and current_roll_items.is_empty():
-			return items
-			
-		var result_item = current_roll_items.pick_random()
-		
-		if result_item is LootTableItem:
-			if not allow_duplicates:
-				current_roll_items.erase(result_item)
-			
-			items.append(result_item)
-		
-	return items
-
+	current_roll_items.shuffle()
+	
+	return current_roll_items.pick_random()
+	
 
 func add_items(items: Array[LootTableItem] = []) -> void:
 	available_items.append_array(items)

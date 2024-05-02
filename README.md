@@ -18,23 +18,25 @@
 
 `Lootie` serves as a tool for game developers to define and manage the random generation of loot items within their games. It allows specifying a list of available items with their respective weights or rarity tiers, enabling the generation of loot with controlled probabilities. The class offers various methods for adding, removing, and manipulating the loot items, along with two primary generation methods: `weight-based` and `roll-tier based`
 
-- [Getting started](#getting-started)
+- [Getting started 💨](#getting-started-)
   - [Global](#global)
-  - [Individual](#individual)
-  - [LootTableItem](#loottableitem)
-    - [Custom Resource Extension](#custom-resource-extension)
-    - [Item Mapper Class](#item-mapper-class)
-    - [Properties](#properties)
-    - [Editor creation](#editor-creation)
-    - [Rarity](#rarity)
-- [Generate loot](#generate-loot)
+  - [Individual node](#individual-node)
+    - [LootTable via GDScript](#loottable-via-gdscript)
+- [LootTableItem 🟨](#loottableitem-)
+  - [Custom Resource Extension](#custom-resource-extension)
+  - [Item Mapper Class](#item-mapper-class)
+  - [Properties](#properties)
+  - [Editor creation](#editor-creation)
+  - [Rarity](#rarity)
+- [Generate loot 🎲](#generate-loot-)
   - [Generate() method](#generate-method)
-  - [Weighted](#weighted)
-  - [Roll tier](#roll-tier)
+  - [Weighted 🎲](#weighted-)
+  - [Roll tier 🎲](#roll-tier-)
+- [Add or Remove items via GDScript](#add-or-remove-items-via-gdscript)
 
-# Getting started
+# Getting started 💨
 
-You can use it in two ways:
+You can use it in three ways:
 
 ## Global
 
@@ -49,7 +51,7 @@ class_name RootLootTable extends LootTable
 
 ![autoload-example](images/autoload-example.png)
 
-## Individual
+## Individual node
 
 `LootTable` can be added as a node and set some items for this particular loot. This is a useful way to define loots based on enemies, chests, or levels where you want to only generate items of a particular type and rarity for that entity, for example.
 
@@ -57,26 +59,80 @@ class_name RootLootTable extends LootTable
 
 ![node-added](images/node-added.png)
 
-## LootTableItem
+### LootTable via GDScript
+
+The `LootieTable` node can be initialied with the `_init` constructor and receive an array of `LootTableItem`, if in the editor exists already defined `LootTableItem` Resources, the ones passed on the constructor will be appended.
+
+This approach uses a different name `LootTable` as `LootieTable` is defined by the plugin to be added as a node, but the internal script is the same.
+
+```swift
+var items := [Item1, Item2, Item3]
+
+var lootie_table := LootTable.new(items)
+
+var loot := lootie_table.generate(3)
+//...
+
+```
+
+# LootTableItem 🟨
 
 `LootTableItem` resource serves as a placeholder for representing items that the `LootTable` plugin uses for loot generation. While these items may not directly correspond to the actual items in your game, they provide the necessary information for the plugin to identify and handle loot generation.
 
 **There are two ways to use this items on your game:**
 
-### Custom Resource Extension
+## Custom Resource Extension
 
 - Create a new resource type that extends the base `LootTableItem` resource provided by the plugin.
 - Add additional properties to your custom resource that align with your game's item data structure.
 - Utilize this custom resource type when defining items in the LootTable plugin.
 
-### Item Mapper Class
+## Item Mapper Class
 
 - Implement an intermediate class or function that acts as an item mapper.
 - This mapper should receive a `LootTableItem` resource as input.
 - Based on the `LootTableItem properties`, the mapper should translate or transform the data into an equivalent Item class or resource from your game's data model.
 - When generating loot using the LootTable plugin, use the mapper to convert the generated `LootTableItem` instances into your game's Item objects
 
-### Properties
+**Something like this, as individual cases can be very different, I hope it gives you an idea of where to start.** I'm using new but you can get the item from your own database or global dictionary where the `id already` returns the item from your game.
+
+Try it out and see what works best for you.
+
+```swift
+//item_mapper.gd
+class_name ItemMapper
+
+
+func map(loot_item: LootTableItem) -> MyGameItem:
+     var item := MyGameItem.new(loot_item.id)
+     item.name = loot_item.name
+
+     //.. more properties
+
+     return item
+
+
+// Or using directly the other resource
+// my_game_item.gd
+class_name MyGameItem extends Resource
+
+@export var id: String
+@export var name: String
+@export var damage: int
+@export var heal: int
+@export var consumable: bool = false
+
+
+static func from(loot_item: LootTableItem) -> MyGameItem
+    var item := MyGameItem.new(loot_item.id)
+    item.name = loot_item.name
+
+    //.. more properties
+
+    return item
+```
+
+## Properties
 
 The LootTableItem resource has several essential properties that must be defined for proper functionality:
 
@@ -125,7 +181,7 @@ static func from_dictionary(data: Dictionary = {}) -> LootTableItem:
 	return item
 ```
 
-### Editor creation
+## Editor creation
 
 In addition to the static helper method, you can also create `LootTableItem` resources directly within the Godot editor
 
@@ -133,7 +189,7 @@ In addition to the static helper method, you can also create `LootTableItem` res
 
 ![resource-creation-2](images/item-resource-creation2.png)
 
-### Rarity
+## Rarity
 
 This resource represents the rarity of the item
 
@@ -154,7 +210,7 @@ You can assign directly the rarity on the editor
 
 ![item-rarity-creation](images/item-rarity-creation.png)
 
-# Generate loot
+# Generate loot 🎲
 
 The cool thing of this plugin is that with a simple method you can generate loot in record time. There are two types of techniques this plugin provides for you.
 
@@ -165,6 +221,8 @@ The cool thing of this plugin is that with a simple method you can generate loot
 This method takes an integer `times` parameter and an optional type parameter _(defaulting to the `probability_type` property value)_ and returns an array of generated `LootTableItem` objects. It internally utilizes either the `weight()` or `roll_tier()` method based on the provided type.
 
 `times` does not represent the amount of items to generate but the **number of times the generation will be applied** so more `times` means more probability to get the items from this loot table.
+
+if `allow_duplicates` is enabled, an item can be repeated in the returned generation, disable it to only return unique items.
 
 **Basic example**
 
@@ -178,7 +236,7 @@ func _on_death():
     //... do stuff
 ```
 
-You can use the `probability_type` you want on the generation function each time:
+You can use the `probability_type` you want on the generation function each time, by default uses the exported `probability_type` parameter:
 
 ```swift
 loot_table.generate(5, LootieTable.ROLL_TIER)
@@ -187,10 +245,45 @@ loot_table.generate(5, LootieTable.WEIGHT)
 
 ```
 
-## Weighted
+## Weighted 🎲
 
 This method iterates through the available items, calculating their cumulative weights and randomly selecting items based on the accumulated weight values. It repeats this process for the specified `times parameter`, potentially returning up to `max_weight_items` items while considering the `allow_duplicates` flag.
 
-## Roll tier
+Each `LootTableItem` has a `weight` variable, the greater the weight the more probably to be returned on the generation. So higher values for common rarities and lower for higher rarities.
+
+- `max_weight_items`: Defines the maximum amount of items that this generation can return, so even if you use an higher number of `times` the items returned will be this amount.
+- `extra_weight_bias`: Act as a little boost or help to be more probably to generate loot on this generation.
+
+## Roll tier 🎲
 
 This method generates random numbers within the specified `max_roll` range and compares them to the defined rarity tiers of the available items. Based on the roll results, it randomly selects items corresponding to the matching rarity tiers, repeating for the specified times parameter and potentially returning up to `max_roll_items` while considering the `allow_duplicates` flag
+
+- `max_roll_items`: Defines the maximum amount of items that this generation can return, so even if you use an higher number of `times` the items returned will be this amount
+- `max_roll`: The maximum number to delimit the roll value ranges, so a value of 100 means that a roll between 0-100 will be generated. This is important because items with `min_roll` > 100 will not be reached on this roll tier generation.
+
+As you notice in `LootItemRarity` there are two properties that works as a range:
+
+- `min_roll`: The minimum roll value to be valid as posibly generated
+- `max_roll`: The maximum roll value to be valid as posibly generated.
+
+So if my item has a `min_roll` of 5 and `max_roll` of 20. Only values between 5 and 20 in each roll tier generation will be valid to return this item.
+
+Higher roll ranges for an item in `roll_tier` generations means more probabilities to be returned.
+
+Imagine I defined a `LootTable` with a `max_roll` of 100, so in each generation a random number between 0-100 will be randomly calculated. If the number is 7.55, items where this number falls within the valid range will be candidates for return.
+
+# Add or Remove items via GDScript
+
+This plugin provides a few helper functions to add or remove items on runtime:
+
+`func add_items(items: Array[LootTableItem] = []) -> void`
+
+`func add_item(item: LootTableItem) -> void`
+
+`func remove_items(items: Array[LootTableItem] = []) -> void`
+
+`func remove_item(item: LootTableItem) -> void`
+
+`func remove_items_by_id(item_ids: Array[StringName] = []) -> void`
+
+`func remove_item_by_id(item_id: StringName) -> void`
