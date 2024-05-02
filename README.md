@@ -34,6 +34,7 @@
   - [Weighted 🎲](#weighted-)
   - [Roll tier 🎲](#roll-tier-)
 - [Add or Remove items via GDScript](#add-or-remove-items-via-gdscript)
+- [Other plugins 🕵️](#other-plugins-️)
 
 # Installation
 
@@ -300,3 +301,8 @@ This plugin provides a few helper functions to add or remove items on runtime:
 `func remove_items_by_id(item_ids: Array[StringName] = []) -> void`
 
 `func remove_item_by_id(item_id: StringName) -> void`
+
+# Other plugins 🕵️
+
+- Check out my [gists](https://gist.github.com/ninetailsrabbit) You might find some interesting components or configuration files there.
+- Grab some useful tools for your Godot projects with [GodotWizards]](https://github.com/ninetailsrabbit/GodotWizards])
